@@ -1,7 +1,6 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.text.ParseException;
@@ -80,6 +79,17 @@ public class CheckWriterTest {
 		String amtinWords = "Thirty four dollars and 90/100";
 		try {
 			CheckWriter.Print("3 4.9", "n");;
+		} catch (MyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertEquals(amtinWords, outContent.toString());
+	}
+	@Test
+	public void otherTests() throws ParseException {
+		String amtinWords = "Twelve dollars only";
+		try {
+			CheckWriter.Print(".12", "y");;
 		} catch (MyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

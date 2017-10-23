@@ -4,9 +4,7 @@ Oct 19 2017
 
 CheckWriter*/
  
-import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class CheckWriter {
