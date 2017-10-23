@@ -4,6 +4,7 @@ import static org.junit.Assert.fail;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.text.ParseException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -16,19 +17,17 @@ public class CheckWriterTest {
 	public void setUpStreams() {
 		System.setOut(new PrintStream(outContent));
 	}
-
+ 
 	@After
 	public void cleanUpStreams() {
 		System.setOut(null);
 	}
 
 	@Test
-	public void testAmt() {
+	public void testAmt() throws ParseException {
 		String amtinWords = "Thirty four dollars only";
-		ByteArrayInputStream in = new ByteArrayInputStream("34".getBytes());
-		System.setIn(in);
 		try {
-			CheckWriter.getInput();
+			CheckWriter.Print("34", "n");;
 		} catch (MyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -37,12 +36,10 @@ public class CheckWriterTest {
 	}
 
 	@Test
-	public void testAmtwithDec() {
+	public void testAmtwithDec() throws ParseException {
 		String amtinWords = "Thirty four dollars and 12/100";
-		ByteArrayInputStream in = new ByteArrayInputStream("34.12".getBytes());
-		System.setIn(in);
 		try {
-			CheckWriter.getInput();
+			CheckWriter.Print("34.12", "n");
 		} catch (MyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,12 +48,10 @@ public class CheckWriterTest {
 	}
 
 	@Test
-	public void testwithNoNumbersinFrontofDec() {
+	public void testwithNoNumbersinFrontofDec() throws ParseException {
 		String amtinWords = "Zero dollars and 12/100";
-		ByteArrayInputStream in = new ByteArrayInputStream(".12".getBytes());
-		System.setIn(in);
 		try {
-			CheckWriter.getInput();
+			CheckWriter.Print(".12", "n");
 		} catch (MyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -65,14 +60,30 @@ public class CheckWriterTest {
 	}
 
 	@Test
-	public void testwrongCentFormat() {
-		ByteArrayInputStream in = new ByteArrayInputStream(".123".getBytes());
-		System.setIn(in);
+	public void testwrongCentFormat() throws ParseException {
 		try {
-			CheckWriter.getInput();
+			CheckWriter.Print(",123", "y");
 			fail("Didn't throw");
 		} catch (MyException e) {
 		}
 	}
-
+	@Test
+	public void testInputformat() throws Exception {
+		try {
+			CheckWriter.Print("k.k", "n");
+			fail("Didn't throw");
+		} catch (NumberFormatException e) {
+		}
+	}
+	@Test
+	public void testwSpace() throws ParseException {
+		String amtinWords = "Thirty four dollars and 90/100";
+		try {
+			CheckWriter.Print("3 4.9", "n");;
+		} catch (MyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertEquals(amtinWords, outContent.toString());
+	}
 }
